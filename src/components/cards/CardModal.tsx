@@ -40,11 +40,6 @@ export function CardModal({ card, isOpen, onClose }: CardModalProps) {
 
                         <div className="space-y-4">
                             <div>
-                                <h3 className="font-semibold text-gray-900 dark:text-white">Mana Cost</h3>
-                                <p className="text-gray-700 dark:text-gray-300">{card.manaCost || 'N/A'}</p>
-                            </div>
-
-                            <div>
                                 <h3 className="font-semibold text-gray-900 dark:text-white">Type</h3>
                                 <p className="text-gray-700 dark:text-gray-300">{card.type}</p>
                             </div>

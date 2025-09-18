@@ -8,12 +8,18 @@ import {CardItem} from '@/components/cards/CardItem';
 import {LoadingSpinner} from '@/components/ui/LoadingSpinner';
 import {ErrorMessage} from '@/components/ui/ErrorMessage';
 import {Pagination} from '@/components/ui/Pagination';
+import {CardFilters, CardFilters as CardFiltersType} from '@/components/ui/CardFilters';
 
 
 // Main Cards Page Component
 export default function CardsPage() {
     const [currentPage, setCurrentPage] = useState(1);
-    const {cards, loading, error, pagination, fetchPage} = useCards({page: currentPage, limit: 20});
+    const [filters, setFilters] = useState<CardFiltersType>({});
+    const {cards, loading, error, pagination, fetchPage} = useCards({
+        page: currentPage, 
+        limit: 20, 
+        filters
+    });
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -35,6 +41,18 @@ export default function CardsPage() {
         fetchPage(page);
     };
 
+    // Handle filter changes
+    const handleFiltersChange = (newFilters: CardFiltersType) => {
+        setFilters(newFilters);
+        setCurrentPage(1); // Reset to first page when filters change
+    };
+
+    // Handle clear filters
+    const handleClearFilters = () => {
+        setFilters({});
+        setCurrentPage(1);
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <div className="container mx-auto px-4 py-8">
@@ -42,6 +60,12 @@ export default function CardsPage() {
                     Magic: The Gathering Cards
                 </h1>
 
+                {/* Filters */}
+                <CardFilters
+                    filters={filters}
+                    onFiltersChange={handleFiltersChange}
+                    onClearFilters={handleClearFilters}
+                />
 
                 {/* Error State */}
                 {error && <ErrorMessage message={error}/>}

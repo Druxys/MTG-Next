@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Card, CardSearchResponse } from '@/models/card';
+import { CardFilters } from '@/components/ui/CardFilters';
 
 interface UsePaginatedCardsOptions {
     page?: number;
     limit?: number;
+    filters?: CardFilters;
 }
 
 export function useCards(options: UsePaginatedCardsOptions = {}) {
-    const { page = 1, limit = 20 } = options;
+    const { page = 1, limit = 20, filters } = options;
     const [cards, setCards] = useState<Card[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -31,6 +33,28 @@ export function useCards(options: UsePaginatedCardsOptions = {}) {
                 params.append('limit', limit.toString());
             }
 
+            // Add filter parameters if they exist
+            if (filters) {
+                if (filters.name) {
+                    params.append('name', filters.name);
+                }
+                if (filters.type) {
+                    params.append('type', filters.type);
+                }
+                if (filters.rarity) {
+                    params.append('rarity', filters.rarity);
+                }
+                if (filters.colors && filters.colors.length > 0) {
+                    params.append('colors', filters.colors.join(','));
+                }
+                if (filters.minCmc !== undefined) {
+                    params.append('minCmc', filters.minCmc.toString());
+                }
+                if (filters.maxCmc !== undefined) {
+                    params.append('maxCmc', filters.maxCmc.toString());
+                }
+            }
+
             const response = await fetch(`http://localhost:4000/api/cards?${params}`);
 
             if (!response.ok) {
@@ -52,7 +76,7 @@ export function useCards(options: UsePaginatedCardsOptions = {}) {
     // Initial load
     useEffect(() => {
         fetchCards(page);
-    }, [page, limit]);
+    }, [page, limit, filters]);
 
     return {
         cards,
