@@ -7,11 +7,13 @@ import {CardModal} from '@/components/cards/CardModal';
 import {CardItem} from '@/components/cards/CardItem';
 import {LoadingSpinner} from '@/components/ui/LoadingSpinner';
 import {ErrorMessage} from '@/components/ui/ErrorMessage';
+import {Pagination} from '@/components/ui/Pagination';
 
 
 // Main Cards Page Component
 export default function CardsPage() {
-    const {cards, loading, error} = useCards();
+    const [currentPage, setCurrentPage] = useState(1);
+    const {cards, loading, error, pagination, fetchPage} = useCards({page: currentPage, limit: 20});
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -27,11 +29,17 @@ export default function CardsPage() {
         setSelectedCard(null);
     };
 
+    // Handle page change
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        fetchPage(page);
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-                    Cartes Magic: The Gathering
+                    Magic: The Gathering Cards
                 </h1>
 
 
@@ -43,15 +51,28 @@ export default function CardsPage() {
 
                 {/* Cards Grid */}
                 {cards.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                        {cards.map((card) => (
-                            <CardItem
-                                key={card._id}
-                                card={card}
-                                onClick={handleCardClick}
+                    <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                            {cards.map((card) => (
+                                <CardItem
+                                    key={card._id}
+                                    card={card}
+                                    onClick={handleCardClick}
+                                />
+                            ))}
+                        </div>
+
+                        {/* Pagination */}
+                        {pagination.totalPages > 1 && (
+                            <Pagination
+                                currentPage={pagination.currentPage}
+                                totalPages={pagination.totalPages}
+                                onPageChange={handlePageChange}
+                                hasNext={pagination.hasNext}
+                                hasPrev={pagination.hasPrev}
                             />
-                        ))}
-                    </div>
+                        )}
+                    </>
                 )}
             </div>
 

@@ -3,7 +3,7 @@ interface LoadingSpinnerProps {
     className?: string;
 }
 
-export function LoadingSpinner({ message = "Chargement...", className = "" }: LoadingSpinnerProps) {
+export function LoadingSpinner({ message = "Loading...", className = "" }: LoadingSpinnerProps) {
     return (
         <div className={`flex flex-col justify-center items-center py-12 ${className}`}>
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>

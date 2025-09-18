@@ -1,55 +1,65 @@
 import { useState, useEffect } from 'react';
 import { Card, CardSearchResponse } from '@/models/card';
 
-export function useCards() {
+interface UsePaginatedCardsOptions {
+    page?: number;
+    limit?: number;
+}
+
+export function useCards(options: UsePaginatedCardsOptions = {}) {
+    const { page = 1, limit = 20 } = options;
     const [cards, setCards] = useState<Card[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [pagination, setPagination] = useState({
+        currentPage: 1,
+        totalPages: 0,
+        totalCards: 0,
+        hasNext: false,
+        hasPrev: false,
+    });
 
-    // Fetch all cards from all pages
-    const fetchAllCards = async () => {
+    // Fetch cards for a specific page
+    const fetchCards = async (pageNum: number = page) => {
         try {
             setLoading(true);
             setError(null);
-            setCards([]);
 
-            let currentPage = 1;
-            let allCards: Card[] = [];
-            let hasMorePages = true;
-
-            while (hasMorePages) {
-                const params = new URLSearchParams();
-                params.append('page', currentPage.toString());
-
-                const response = await fetch(`http://localhost:4000/api/cards?${params}`);
-
-                const data: CardSearchResponse = await response.json();
-                allCards = [...allCards, ...data.cards];
-                
-                // Update cards state incrementally for better UX
-                setCards([...allCards]);
-
-                hasMorePages = data.pagination.hasNext;
-                currentPage++;
+            const params = new URLSearchParams();
+            params.append('page', pageNum.toString());
+            if (limit) {
+                params.append('limit', limit.toString());
             }
 
+            const response = await fetch(`http://localhost:4000/api/cards?${params}`);
+
+            if (!response.ok) {
+                throw new Error('Error loading cards');
+            }
+
+            const data: CardSearchResponse = await response.json();
+            setCards(data.cards);
+            setPagination(data.pagination);
+
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+            setError(err instanceof Error ? err.message : 'An error occurred');
             setCards([]);
         } finally {
             setLoading(false);
         }
     };
 
-    // Initial load - fetch all cards
+    // Initial load
     useEffect(() => {
-        fetchAllCards();
-    }, []);
+        fetchCards(page);
+    }, [page, limit]);
 
     return {
         cards,
         loading,
         error,
-        refetch: fetchAllCards
+        pagination,
+        refetch: () => fetchCards(page),
+        fetchPage: fetchCards
     };
 }

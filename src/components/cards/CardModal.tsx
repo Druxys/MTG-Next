@@ -18,7 +18,7 @@ export function CardModal({ card, isOpen, onClose }: CardModalProps) {
                         <button
                             onClick={onClose}
                             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                            aria-label="Fermer"
+                            aria-label="Close"
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -40,7 +40,7 @@ export function CardModal({ card, isOpen, onClose }: CardModalProps) {
 
                         <div className="space-y-4">
                             <div>
-                                <h3 className="font-semibold text-gray-900 dark:text-white">Coût de mana</h3>
+                                <h3 className="font-semibold text-gray-900 dark:text-white">Mana Cost</h3>
                                 <p className="text-gray-700 dark:text-gray-300">{card.manaCost || 'N/A'}</p>
                             </div>
 
@@ -51,33 +51,33 @@ export function CardModal({ card, isOpen, onClose }: CardModalProps) {
 
                             {card.text && (
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white">Texte</h3>
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">Text</h3>
                                     <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{card.text}</p>
                                 </div>
                             )}
 
                             {card.power && card.toughness && (
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white">Force/Endurance</h3>
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">Power/Toughness</h3>
                                     <p className="text-gray-700 dark:text-gray-300">{card.power}/{card.toughness}</p>
                                 </div>
                             )}
 
                             <div>
-                                <h3 className="font-semibold text-gray-900 dark:text-white">Rareté</h3>
+                                <h3 className="font-semibold text-gray-900 dark:text-white">Rarity</h3>
                                 <p className="text-gray-700 dark:text-gray-300 capitalize">{card.rarity}</p>
                             </div>
 
                             {card.convertedManaCost !== undefined && (
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white">Coût converti</h3>
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">Converted Cost</h3>
                                     <p className="text-gray-700 dark:text-gray-300">{card.convertedManaCost}</p>
                                 </div>
                             )}
 
                             {card.colors && card.colors.length > 0 && (
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white">Couleurs</h3>
+                                    <h3 className="font-semibold text-gray-900 dark:text-white">Colors</h3>
                                     <div className="flex gap-2">
                                         {card.colors.map((color) => (
                                             <span
