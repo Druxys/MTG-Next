@@ -34,6 +34,7 @@ const CARD_TYPES = [
     { value: 'Land', label: 'Land' },
     { value: 'Planeswalker', label: 'Planeswalker' },
     { value: 'Sorcery', label: 'Sorcery' },
+    { value: 'Emblem', label: 'Emblem' },
 ];
 
 const RARITIES = [
@@ -180,18 +181,6 @@ export function CardFilters({ filters, onFiltersChange, onClearFilters }: CardFi
                     </div>
                 </div>
             </div>
-
-            {/* Active Filters Summary */}
-            {hasActiveFilters && (
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                        Active filters: {Object.keys(localFilters).filter(key => {
-                            const value = localFilters[key as keyof CardFilters];
-                            return value !== undefined && value !== '' && (Array.isArray(value) ? value.length > 0 : true);
-                        }).length}
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
