@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { Card } from '@/models/card';
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthModal } from '@/components/auth/AuthModal';
 
 interface AddCardModalProps {
     isOpen: boolean;
@@ -36,6 +38,8 @@ const RARITIES = [
 ];
 
 export function AddCardModal({ isOpen, onClose, onCardAdded }: AddCardModalProps) {
+    const { isAuthenticated, token } = useAuth();
+    const [showAuthModal, setShowAuthModal] = useState(false);
     const [formData, setFormData] = useState<CardFormData>({
         name: '',
         manaCost: '',
@@ -69,6 +73,13 @@ export function AddCardModal({ isOpen, onClose, onCardAdded }: AddCardModalProps
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // Check authentication first
+        if (!isAuthenticated) {
+            setShowAuthModal(true);
+            return;
+        }
+        
         setLoading(true);
         setError(null);
 
@@ -98,6 +109,9 @@ export function AddCardModal({ isOpen, onClose, onCardAdded }: AddCardModalProps
             console.log(submitData);
             const response = await fetch('http://localhost:4000/api/cards', {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
                 body: submitData
             });
 
@@ -325,6 +339,12 @@ export function AddCardModal({ isOpen, onClose, onCardAdded }: AddCardModalProps
                     </form>
                 </div>
             </div>
+            
+            <AuthModal
+                isOpen={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                onSuccess={() => setShowAuthModal(false)}
+            />
         </div>
     );
 }
