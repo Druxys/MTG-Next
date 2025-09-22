@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardSearchResponse } from '@/models/card';
 import { CardFilters } from '@/components/ui/CardFilters';
+import { API_CONFIG } from '@/lib/config/api';
 
 interface UsePaginatedCardsOptions {
     page?: number;
@@ -55,7 +56,7 @@ export function useCards(options: UsePaginatedCardsOptions = {}) {
                 }
             }
 
-            const response = await fetch(`http://localhost:4000/api/cards?${params}`);
+            const response = await fetch(`${API_CONFIG.ENDPOINTS.CARDS}?${params}`);
 
             if (!response.ok) {
                 throw new Error('Error loading cards');

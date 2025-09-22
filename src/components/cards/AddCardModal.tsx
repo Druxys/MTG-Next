@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Card } from '@/models/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { API_CONFIG } from '@/lib/config/api';
 
 interface AddCardModalProps {
     isOpen: boolean;
@@ -107,7 +108,7 @@ export function AddCardModal({ isOpen, onClose, onCardAdded }: AddCardModalProps
             if (formData.convertedManaCost) submitData.append('convertedManaCost', formData.convertedManaCost.toString());
             if (formData.image) submitData.append('image', formData.image);
             console.log(submitData);
-            const response = await fetch('http://localhost:4000/api/cards', {
+            const response = await fetch(API_CONFIG.ENDPOINTS.CARDS, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

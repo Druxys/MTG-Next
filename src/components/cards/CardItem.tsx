@@ -1,4 +1,5 @@
 import { Card } from '@/models/card';
+import { API_CONFIG } from '@/lib/config/api';
 
 interface CardItemProps {
     card: Card;
@@ -13,7 +14,7 @@ export function CardItem({ card, onClick }: CardItemProps) {
         >
             {card.imagePath ? (
                 <img
-                    src={`http://localhost:4000/api/cards/${card._id}/image`}
+                    src={API_CONFIG.ENDPOINTS.CARD_IMAGE(card._id)}
                     alt={card.name}
                     className="w-full h-48 object-cover"
                 />

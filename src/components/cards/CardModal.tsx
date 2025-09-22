@@ -1,4 +1,5 @@
 import { Card } from '@/models/card';
+import { API_CONFIG } from '@/lib/config/api';
 
 interface CardModalProps {
     card: Card | null;
@@ -31,7 +32,7 @@ export function CardModal({ card, isOpen, onClose }: CardModalProps) {
                         <div>
                             {card.imagePath && (
                                 <img
-                                    src={`http://localhost:4000/api/cards/${card._id}/image`}
+                                    src={API_CONFIG.ENDPOINTS.CARD_IMAGE(card._id)}
                                     alt={card.name}
                                     className="w-full rounded-lg shadow-lg"
                                 />
