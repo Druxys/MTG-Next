@@ -4,6 +4,7 @@ import {useState} from 'react';
 import {Card} from '@/models/card';
 import {useCards} from '@/lib/hooks/useCards';
 import {CardModal} from '@/components/cards/CardModal';
+import {AddCardModal} from '@/components/cards/AddCardModal';
 import {CardItem} from '@/components/cards/CardItem';
 import {LoadingSpinner} from '@/components/ui/LoadingSpinner';
 import {ErrorMessage} from '@/components/ui/ErrorMessage';
@@ -22,6 +23,7 @@ export default function CardsPage() {
     });
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     // Handle card click
     const handleCardClick = (card: Card) => {
@@ -53,12 +55,37 @@ export default function CardsPage() {
         setCurrentPage(1);
     };
 
+    // Handle add card modal
+    const handleOpenAddModal = () => {
+        setIsAddModalOpen(true);
+    };
+
+    const handleCloseAddModal = () => {
+        setIsAddModalOpen(false);
+    };
+
+    const handleCardAdded = () => {
+        // Refresh the cards list by fetching the current page
+        fetchPage(currentPage);
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <div className="container mx-auto px-4 py-8">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-                    Magic: The Gathering Cards
-                </h1>
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                        Magic: The Gathering Cards
+                    </h1>
+                    <button
+                        onClick={handleOpenAddModal}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Ajouter une carte
+                    </button>
+                </div>
 
                 {/* Filters */}
                 <CardFilters
@@ -100,8 +127,13 @@ export default function CardsPage() {
                 )}
             </div>
 
-            {/* Modal */}
+            {/* Modals */}
             <CardModal card={selectedCard} isOpen={isModalOpen} onClose={closeModal}/>
+            <AddCardModal
+                isOpen={isAddModalOpen}
+                onClose={handleCloseAddModal}
+                onCardAdded={handleCardAdded}
+            />
         </div>
     );
 }
