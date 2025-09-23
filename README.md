@@ -16,7 +16,7 @@ Make sure you have the following installed on your system:
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repository-url>
+   git clone https://github.com/Druxys/MTG-Next
    cd MTG-Next
    ```
 
